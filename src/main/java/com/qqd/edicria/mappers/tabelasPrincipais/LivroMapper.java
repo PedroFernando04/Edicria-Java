@@ -7,7 +7,6 @@ import com.qqd.edicria.entities.tabelasPrincipais.Editora;
 import com.qqd.edicria.entities.tabelasPrincipais.Livro;
 import com.qqd.edicria.repositories.tabelasPrincipais.AutorRepository;
 import com.qqd.edicria.repositories.tabelasPrincipais.EditoraRepository;
-import com.qqd.edicria.repositories.tabelasPrincipais.LivroRepository;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,7 +36,7 @@ public class LivroMapper {
             LivroRequestDTO dto,
             Autor autor,
             Editora editora) {
-        Livro livro = new Livro();
+    Livro livro = new Livro();
 
         livro.setTitulo(dto.titulo());
         livro.setAutor(autor);

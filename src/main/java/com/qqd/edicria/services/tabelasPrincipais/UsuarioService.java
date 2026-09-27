@@ -33,10 +33,10 @@ public class UsuarioService {
     public UsuarioResponseDTO createUsuario(UsuarioRequestDTO dto) {
 
         if(usuarioRepository.existsByEmail(dto.email())){
-            throw new EmailJaCadastradoException("Email já cadastrado");
+            throw new EmailJaCadastradoException("Email já cadastrado: " +   dto.email());
         }
         if(usuarioRepository.existsByNome(dto.nome())){
-            throw new NomeJaCadastradoException("Nome já cadastrado");
+            throw new NomeJaCadastradoException("Nome já cadastrado: " +   dto.nome());
         }
 
         Usuario usuario = usuarioMapper.toEntity(dto);
@@ -78,7 +78,7 @@ public class UsuarioService {
 
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new UsuarioNaoEncontrado("Usuário não encontrado")
+                        new UsuarioNaoEncontrado("Usuário não encontrado: " + email)
                 );
 
         boolean alterou = false;
@@ -88,7 +88,7 @@ public class UsuarioService {
                 && !dto.nome().isBlank()){
 
             if(usuarioRepository.existsByNome(dto.nome())){
-                throw new NomeJaCadastradoException("Nome já cadastrado");
+                throw new NomeJaCadastradoException("Nome já cadastrado: " +  dto.nome());
             }
 
             usuario.setNome(dto.nome());
@@ -100,7 +100,7 @@ public class UsuarioService {
                 && !dto.email().isBlank()){
 
             if(usuarioRepository.existsByEmail(dto.email())){
-                throw new EmailJaCadastradoException("Email ja cadastrado");
+                throw new EmailJaCadastradoException("Email ja cadastrado: " +  dto.email());
             }
 
             usuario.setEmail(dto.email());
