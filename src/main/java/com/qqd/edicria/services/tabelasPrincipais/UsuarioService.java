@@ -1,15 +1,33 @@
 package com.qqd.edicria.services.tabelasPrincipais;
 
+import com.qqd.edicria.dtos.request.tabelasAuxiliares.LoginRequestDTO;
 import com.qqd.edicria.dtos.request.tabelasPrincipais.Usuario.UsuarioRequestDTO;
 import com.qqd.edicria.dtos.request.tabelasPrincipais.Usuario.UsuarioUpdateRequestDTO;
+
 import com.qqd.edicria.dtos.response.tabelasPrincipais.UsuarioResponseDTO;
+
 import com.qqd.edicria.entities.tabelasPrincipais.Usuario;
+
 import com.qqd.edicria.exceptions.tabelasPrincipais.Usuario.EmailJaCadastradoException;
 import com.qqd.edicria.exceptions.tabelasPrincipais.Usuario.NomeJaCadastradoException;
 import com.qqd.edicria.exceptions.tabelasPrincipais.Usuario.UsuarioNaoEncontrado;
+
 import com.qqd.edicria.mappers.tabelasPrincipais.UsuarioMapper;
+
 import com.qqd.edicria.repositories.tabelasPrincipais.UsuarioRepository;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +39,22 @@ public class UsuarioService {
     private final PasswordEncoder passwordEncoder;
     private final UsuarioMapper usuarioMapper;
 
+
+    private final AuthenticationManager authenticationManager;
+    private final SecurityContextRepository securityContextRepository;
+
     public UsuarioService(UsuarioRepository usuarioRepository,
                           PasswordEncoder passwordEncoder,
-                          UsuarioMapper usuarioMapper) {
+                          UsuarioMapper usuarioMapper,
+                          AuthenticationManager authenticationManager) {
 
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.usuarioMapper = usuarioMapper;
+
+        this.authenticationManager = authenticationManager;
+        this.securityContextRepository =
+                new HttpSessionSecurityContextRepository();
     }
 
     public UsuarioResponseDTO createUsuario(UsuarioRequestDTO dto) {
@@ -139,5 +166,43 @@ public class UsuarioService {
         }
 
         return usuarioMapper.toResponseDTO(usuario);
+    }
+
+    public void login(
+            LoginRequestDTO dto,
+            HttpServletRequest request,
+            HttpServletResponse response){
+
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                dto.email(),
+                                dto.senha()
+                        )
+                );
+
+        SecurityContext context =
+                SecurityContextHolder.createEmptyContext();
+
+        context.setAuthentication(authentication);
+
+        SecurityContextHolder.setContext(context);
+
+        securityContextRepository.saveContext(
+                context,
+                request,
+                response
+        );
+    }
+
+    public void logout(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ){
+
+        SecurityContextLogoutHandler logoutHandler =
+                new SecurityContextLogoutHandler();
+
+        logoutHandler.logout(request, response, null);
     }
 }

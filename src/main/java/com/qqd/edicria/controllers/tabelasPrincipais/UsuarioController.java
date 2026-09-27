@@ -10,14 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,29 +20,20 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final AuthenticationManager authenticationManager;
-    private final SecurityContextRepository securityContextRepository;
 
     public UsuarioController(
-            UsuarioService usuarioService,
-            AuthenticationManager authenticationManager
+            UsuarioService usuarioService
     ) {
         this.usuarioService = usuarioService;
-        this.authenticationManager = authenticationManager;
-        this.securityContextRepository =
-                new HttpSessionSecurityContextRepository();
     }
 
     @PostMapping
     public ResponseEntity<UsuarioResponseDTO> criarUsuario(
             @Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO
     ) {
-        UsuarioResponseDTO usuarioCriado =
-                usuarioService.createUsuario(usuarioRequestDTO);
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(usuarioCriado);
+                .body(usuarioService.createUsuario(usuarioRequestDTO));
     }
 
     @GetMapping
@@ -71,12 +55,9 @@ public class UsuarioController {
             @Valid @RequestBody UsuarioUpdateRequestDTO dto,
             Authentication authentication
     ) {
-            UsuarioResponseDTO usuarioAtualizado =
-                    usuarioService.updateUsuario(dto, authentication.getName());
-
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(usuarioAtualizado);
+                    .body(usuarioService.updateUsuario(dto, authentication.getName()));
     }
 
 
@@ -87,26 +68,7 @@ public class UsuarioController {
             HttpServletResponse response
     ) {
 
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                dto.email(),
-                                dto.senha()
-                        )
-                );
-
-        SecurityContext context =
-                SecurityContextHolder.createEmptyContext();
-
-        context.setAuthentication(authentication);
-
-        SecurityContextHolder.setContext(context);
-
-        securityContextRepository.saveContext(
-                context,
-                request,
-                response
-        );
+        usuarioService.login(dto, request, response);
 
         return ResponseEntity.ok().build();
     }
@@ -116,10 +78,8 @@ public class UsuarioController {
             HttpServletRequest request,
             HttpServletResponse response
     ){
-        SecurityContextLogoutHandler logoutHandler =
-                new SecurityContextLogoutHandler();
 
-        logoutHandler.logout(request, response, null);
+        usuarioService.logout(request, response);
 
         return ResponseEntity.ok().build();
     }

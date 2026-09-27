@@ -28,12 +28,9 @@ public class AutorController {
     public ResponseEntity<AutorResponseDTO> createAutor (
             @Valid @RequestBody AutorRequestDTO autorRequestDTO){
 
-        AutorResponseDTO responseDTO =
-                autorService.createAutor(autorRequestDTO);
-
         return  ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(responseDTO);
+                    .body(autorService.createAutor(autorRequestDTO));
     }
 
     @PutMapping("/{id}")
@@ -41,24 +38,18 @@ public class AutorController {
             @RequestBody AutorUpdateRequestDTO autorUpdateRequestDTO,
             @PathVariable Long id) {
 
-        AutorResponseDTO resultado =
-                autorService.updateAutor(autorUpdateRequestDTO, id);
-
         return  ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(resultado);
+                    .body(autorService.updateAutor(autorUpdateRequestDTO, id));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AutorResponseDTO> getAutor (
             @PathVariable Long id) {
 
-        AutorResponseDTO responseDTO =
-                autorService.getAutor(id);
-
         return  ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(responseDTO);
+                    .body(autorService.getAutor(id));
     }
 
     @GetMapping
