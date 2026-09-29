@@ -5,7 +5,7 @@ import com.qqd.edicria.entities.enums.livros.EnumFormatoLivro;
 
 import java.time.LocalDate;
 
-public record LivroUpdateResquestDTO(
+public record LivroUpdateRequestDTO(
 
         String titulo,
 

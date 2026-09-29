@@ -2,8 +2,6 @@ package com.qqd.edicria.dtos.response.tabelasPrincipais;
 
 import com.qqd.edicria.entities.enums.livros.EnumCategoriasLivro;
 import com.qqd.edicria.entities.enums.livros.EnumFormatoLivro;
-import com.qqd.edicria.entities.tabelasPrincipais.Autor;
-import com.qqd.edicria.entities.tabelasPrincipais.Editora;
 
 import java.time.LocalDate;
 
@@ -13,9 +11,9 @@ public record LivroResponseDTO(
 
         String titulo,
 
-        Autor autor,
+        AutorResponseDTO autor,
 
-        Editora editora,
+        EditoraResponseDTO editora,
 
         LocalDate dataLancamento,
 

@@ -5,27 +5,25 @@ import com.qqd.edicria.dtos.response.tabelasPrincipais.LivroResponseDTO;
 import com.qqd.edicria.entities.tabelasPrincipais.Autor;
 import com.qqd.edicria.entities.tabelasPrincipais.Editora;
 import com.qqd.edicria.entities.tabelasPrincipais.Livro;
-import com.qqd.edicria.repositories.tabelasPrincipais.AutorRepository;
-import com.qqd.edicria.repositories.tabelasPrincipais.EditoraRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LivroMapper {
 
-    private AutorRepository autorRepository;
-    private EditoraRepository editoraRepository;
+    private final AutorMapper autorMapper;
+    private final EditoraMapper editoraMapper;
 
-    public  LivroMapper(AutorRepository autorRepository, EditoraRepository editoraRepository) {
-        this.autorRepository = autorRepository;
-        this.editoraRepository = editoraRepository;
+    public  LivroMapper(AutorMapper autorMapper, EditoraMapper editoraMapper) {
+        this.autorMapper = autorMapper;
+        this.editoraMapper = editoraMapper;
     }
 
     public LivroResponseDTO toResponseDTO(Livro livro) {
         return new LivroResponseDTO(
                 livro.getId(),
                 livro.getTitulo(),
-                livro.getAutor(),
-                livro.getEditora(),
+                autorMapper.toResponseDTO(livro.getAutor()),
+                editoraMapper.toResponseDTO(livro.getEditora()),
                 livro.getDataLancamento(),
                 livro.getCategoria(),
                 livro.getFormato()
