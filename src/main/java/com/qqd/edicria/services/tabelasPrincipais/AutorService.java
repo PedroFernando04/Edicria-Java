@@ -94,16 +94,12 @@ public class AutorService {
         return autorMapper.toResponseDTO(autor);
     }
 
-    public List<AutorResponseDTO> getAll(){
+    public List<AutorResponseDTO> getAllAutores(){
         List<Autor> autores = autorRepository.findAll();
 
-        return autores.stream()
-                .map(autor -> new AutorResponseDTO(
-                        autor.getId(),
-                        autor.getNome(),
-                        autor.getPaisOrigem(),
-                        autor.getGenero()
-                ))
+        return autores
+                .stream()
+                .map(autorMapper::toResponseDTO)
                 .toList();
     }
 }

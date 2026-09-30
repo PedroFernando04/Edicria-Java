@@ -48,6 +48,15 @@ public class LivroController {
                 .body(livroService.getLivro(id));
     }
 
+    @GetMapping("/titulo")
+    public ResponseEntity<LivroResponseDTO> getLivroByTitulo(
+            @RequestParam String titulo){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(livroService.getLivroByTitulo(titulo)
+                );
+    }
+
     @GetMapping
     public ResponseEntity<List<LivroResponseDTO>> getAllLivros(){
         return ResponseEntity

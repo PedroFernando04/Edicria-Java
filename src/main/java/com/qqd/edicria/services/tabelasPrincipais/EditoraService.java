@@ -90,11 +90,9 @@ public class EditoraService {
     public List<EditoraResponseDTO> getAllEditoras(){
         List<Editora> editoras = editoraRepository.findAll();
 
-        return editoras.stream().map(
-                editora -> new EditoraResponseDTO(
-                        editora.getId(),
-                        editora.getNome(),
-                        editora.getPaisOrigem()
-                )).toList();
+        return editoras
+                .stream()
+                .map(editoraMapper::toResponseDTO)
+                .toList();
     }
 }

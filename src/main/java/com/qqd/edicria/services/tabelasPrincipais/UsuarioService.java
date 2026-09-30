@@ -79,16 +79,9 @@ public class UsuarioService {
     public List<UsuarioResponseDTO> getAllUsuarios(){
         List<Usuario> usuarios = usuarioRepository.findAll();
 
-        return usuarios.stream()
-                .map(usuario -> new UsuarioResponseDTO(
-                        usuario.getId(),
-                        usuario.getNome(),
-                        usuario.getEmail(),
-                        usuario.getGenero(),
-                        usuario.getPaisOrigem(),
-                        usuario.getDataNascimento(),
-                        usuario.getAdm()
-                ))
+        return usuarios
+                .stream()
+                .map(usuarioMapper::toResponseDTO)
                 .toList();
     }
 

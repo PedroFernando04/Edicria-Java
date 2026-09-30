@@ -57,6 +57,6 @@ public class AutorController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(autorService.getAll());
+                .body(autorService.getAllAutores());
     }
 }

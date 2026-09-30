@@ -143,19 +143,23 @@ public class LivroService {
         return livroMapper.toResponseDTO(livro);
     }
 
+    public LivroResponseDTO getLivroByTitulo(String titulo){
+        Livro livro = livroRepository.findByTitulo(titulo)
+                .orElseThrow(() ->
+                        new LivroNaoEncontrado(
+                                "Livro não encontrado: " + titulo
+                        )
+                );
+
+        return livroMapper.toResponseDTO(livro);
+    }
+
     public List<LivroResponseDTO> getAllLivros(){
         List<Livro> livros = livroRepository.findAll();
 
-        return livros.stream()
-                .map(livro -> new LivroResponseDTO(
-                        livro.getId(),
-                        livro.getTitulo(),
-                        autorMapper.toResponseDTO(livro.getAutor()),
-                        editoraMapper.toResponseDTO(livro.getEditora()),
-                        livro.getDataLancamento(),
-                        livro.getCategoria(),
-                        livro.getFormato()
-                        )
-                ).toList();
+        return livros
+                .stream()
+                .map(livroMapper::toResponseDTO)
+                .toList();
     }
 }

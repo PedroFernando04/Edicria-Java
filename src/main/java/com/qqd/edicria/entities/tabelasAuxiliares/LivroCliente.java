@@ -5,13 +5,11 @@ import com.qqd.edicria.entities.enums.livros.EnumStatusLivro;
 import com.qqd.edicria.entities.tabelasPrincipais.Livro;
 import com.qqd.edicria.entities.tabelasPrincipais.Usuario;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -35,17 +33,18 @@ public class LivroCliente {
     private EnumStatusLivro status;
 
     @Column(nullable = true)
-    private Date dataLeitura;
+    private LocalDate dataInicioLeitura;
+
+    @Column(nullable = true)
+    private LocalDate dataTerminoLeitura;
 
     @Column(nullable = true, precision = 3, scale = 1)
-    @DecimalMin("0.0")
-    @DecimalMax("10.0")
     private BigDecimal nota;
 
     @Column(nullable = true, length = 3000)
     private String resenha;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private EnumLingua linguaLida;
 }
