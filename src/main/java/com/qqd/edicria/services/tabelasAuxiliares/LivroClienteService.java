@@ -1,6 +1,7 @@
 package com.qqd.edicria.services.tabelasAuxiliares;
 
 import com.qqd.edicria.dtos.request.tabelasAuxiliares.LivroCliente.LivroClienteRequestDTO;
+import com.qqd.edicria.dtos.request.tabelasAuxiliares.LivroCliente.LivroClienteUpdateRequestDTO;
 import com.qqd.edicria.dtos.response.tabelasAuxiliares.LivroClienteResponseDTO;
 import com.qqd.edicria.entities.tabelasAuxiliares.LivroCliente;
 import com.qqd.edicria.entities.tabelasPrincipais.Livro;
@@ -42,14 +43,14 @@ public class LivroClienteService {
 
     public LivroClienteResponseDTO createLivroCliente(LivroClienteRequestDTO dto) {
 
-        Usuario usuario = usuarioRepository.findByEmail(dto.usuarioEmail())
+        Usuario usuario = usuarioRepository.findByEmail(dto.emailUsuario())
                 .orElseThrow(() ->
-                        new UsuarioNaoEncontrado("Usuário não encontrado: " +  dto.usuarioEmail())
+                        new UsuarioNaoEncontrado("Usuário não encontrado: " +  dto.emailUsuario())
                 );
 
-        Livro livro = livroRepository.findByTitulo(dto.livro())
+        Livro livro = livroRepository.findByTitulo(dto.nomeLivro())
                 .orElseThrow(() ->
-                        new LivroNaoEncontrado("Livro não encontrado: " + dto.livro())
+                        new LivroNaoEncontrado("Livro não encontrado: " + dto.nomeLivro())
                 );
 
         if(livroClienteRepository.existsByUsuarioAndLivro(usuario, livro)) {
@@ -64,25 +65,25 @@ public class LivroClienteService {
         return livroClienteMapper.toResponseDTO(livroCliente);
     }
 
-    public LivroClienteResponseDTO updateLivroCliente(LivroClienteRequestDTO dto, Long idLivro, Long idUsuario) {
+    public LivroClienteResponseDTO updateLivroCliente(LivroClienteUpdateRequestDTO dto, Long idLivro, Long idUsuario) {
 
         LivroCliente livroCliente = livroClienteRepository.findByLivroIdAndUsuarioId(idLivro, idUsuario)
                 .orElseThrow(() ->
                         new LivroClienteNaoEncontrado(
-                                "O livro " + dto.livro() + " não está associado ao usuário " + dto.usuarioEmail()
+                                "O livro " + dto.nomeLivro() + " não está associado ao usuário " + dto.emailUsuario()
                         )
                 );
 
         boolean alterou = false;
 
-        if(dto.usuarioEmail() != null
-                && !dto.usuarioEmail().equals(livroCliente.getUsuario().getEmail())
-                && !dto.usuarioEmail().isBlank()
+        if(dto.emailUsuario() != null
+                && !dto.emailUsuario().equals(livroCliente.getUsuario().getEmail())
+                && !dto.emailUsuario().isBlank()
         ){
-            Usuario usuario = usuarioRepository.findByEmail(dto.usuarioEmail())
+            Usuario usuario = usuarioRepository.findByEmail(dto.emailUsuario())
                     .orElseThrow(() ->
                             new UsuarioNaoEncontrado(
-                                    "Usuário não encontrado: " +  dto.usuarioEmail()
+                                    "Usuário não encontrado: " +  dto.emailUsuario()
                             )
                     );
 
@@ -90,14 +91,14 @@ public class LivroClienteService {
             alterou = true;
         }
 
-        if(dto.livro() != null
-                && !dto.livro().equals(livroCliente.getLivro().getTitulo())
-                && !dto.livro().isBlank()
+        if(dto.nomeLivro() != null
+                && !dto.nomeLivro().equals(livroCliente.getLivro().getTitulo())
+                && !dto.nomeLivro().isBlank()
         ){
-            Livro livro = livroRepository.findByTitulo(dto.livro())
+            Livro livro = livroRepository.findByTitulo(dto.nomeLivro())
                     .orElseThrow(() ->
                             new LivroNaoEncontrado(
-                                    "Livro não encontrado: " + dto.livro()
+                                    "Livro não encontrado: " + dto.nomeLivro()
                             )
                     );
 
@@ -126,8 +127,8 @@ public class LivroClienteService {
         if(dto.nota() != null
                 && !dto.nota().equals(livroCliente.getNota())
         ){
-            if(dto.nota().compareTo(new BigDecimal("0.0")) < 0
-                    || dto.nota().compareTo(new BigDecimal("10.0")) < 0
+            if(dto.nota().compareTo(new BigDecimal("0.00")) < 0
+                    || dto.nota().compareTo(new BigDecimal("10.00")) > 0
             ){
                 throw new NotaInvalida("A nota deve ser um valor entre 0 e 10");
             }

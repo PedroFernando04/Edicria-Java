@@ -12,9 +12,9 @@ import java.time.LocalDate;
 
 public record LivroClienteUpdateRequestDTO(
 
-        String usuario,
+        String emailUsuario,
 
-        String livro,
+        String nomeLivro,
 
         EnumStatusLivro statusLivro,
 
@@ -24,8 +24,8 @@ public record LivroClienteUpdateRequestDTO(
         @PastOrPresent(message = "O término da leitura não pode ser previsto")
         LocalDate dataTerminoLeitura,
 
-        @DecimalMin("0.0")
-        @DecimalMax("10.0")
+        @DecimalMin("0.00")
+        @DecimalMax("10.00")
         BigDecimal nota,
 
         @Size(min = 1, max = 3000)

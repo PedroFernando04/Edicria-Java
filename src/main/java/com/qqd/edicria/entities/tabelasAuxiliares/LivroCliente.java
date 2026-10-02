@@ -38,7 +38,7 @@ public class LivroCliente {
     @Column(nullable = true)
     private LocalDate dataTerminoLeitura;
 
-    @Column(nullable = true, precision = 3, scale = 1)
+    @Column(nullable = true, precision = 4, scale = 2)
     private BigDecimal nota;
 
     @Column(nullable = true, length = 3000)

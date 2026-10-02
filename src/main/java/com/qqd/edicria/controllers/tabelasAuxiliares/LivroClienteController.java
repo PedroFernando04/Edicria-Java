@@ -1,8 +1,8 @@
 package com.qqd.edicria.controllers.tabelasAuxiliares;
 
 import com.qqd.edicria.dtos.request.tabelasAuxiliares.LivroCliente.LivroClienteRequestDTO;
+import com.qqd.edicria.dtos.request.tabelasAuxiliares.LivroCliente.LivroClienteUpdateRequestDTO;
 import com.qqd.edicria.dtos.response.tabelasAuxiliares.LivroClienteResponseDTO;
-import com.qqd.edicria.mappers.tabelasAuxiliares.LivroClienteMapper;
 import com.qqd.edicria.services.tabelasAuxiliares.LivroClienteService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -12,18 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("book-user")
+@RequestMapping("api/book-user")
 public class LivroClienteController {
 
     private final LivroClienteService livroClienteService;
-    private final LivroClienteMapper livroClienteMapper;
 
     public LivroClienteController(
-            LivroClienteService livroClienteService,
-            LivroClienteMapper livroClienteMapper
+            LivroClienteService livroClienteService
     ) {
         this.livroClienteService = livroClienteService;
-        this.livroClienteMapper = livroClienteMapper;
     }
 
     @PostMapping
@@ -38,7 +35,7 @@ public class LivroClienteController {
 
     @PutMapping("{idLivro}/{idUsuario}")
     public ResponseEntity<LivroClienteResponseDTO> updateLivroCliente(
-            @Valid @RequestBody LivroClienteRequestDTO livroClienteRequestDTO,
+            @Valid @RequestBody LivroClienteUpdateRequestDTO livroClienteUpdateRequestDTO,
             @PathVariable Long idLivro,
             @PathVariable Long idUsuario
     ){
@@ -46,7 +43,7 @@ public class LivroClienteController {
                 .status(HttpStatus.OK)
                 .body(livroClienteService
                         .updateLivroCliente(
-                                livroClienteRequestDTO,
+                                livroClienteUpdateRequestDTO,
                                 idLivro,
                                 idUsuario
                         )
@@ -83,7 +80,7 @@ public class LivroClienteController {
     }
 
     @GetMapping("/all/{id}")
-    public ResponseEntity<List<LivroClienteResponseDTO>> getLivroClienteByUserAndLivro(@PathVariable Long id){
+public ResponseEntity<List<LivroClienteResponseDTO>> getLivroClienteByUserAndLivro(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.FOUND).body(livroClienteService.getAllLivroClienteByUsuario(id));
     }
 }

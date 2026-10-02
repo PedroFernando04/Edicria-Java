@@ -10,10 +10,10 @@ import java.time.LocalDate;
 public record LivroClienteRequestDTO(
 
         @NotBlank(message = "Usuário é obrigatório")
-        String usuarioEmail,
+        String emailUsuario,
 
         @NotBlank(message = "Livro é obrigatório")
-        String livro,
+        String nomeLivro,
 
         @NotNull(message = "Status é obrigatório")
         EnumStatusLivro statusLivro,
@@ -24,8 +24,8 @@ public record LivroClienteRequestDTO(
         @PastOrPresent(message = "O término da leitura não pode ser previsto")
         LocalDate dataTerminoLeitura,
 
-        @DecimalMin("0.0")
-        @DecimalMax("10.0")
+        @DecimalMin("0.00")
+        @DecimalMax("10.00")
         BigDecimal nota,
 
         @Size(min = 1, max = 3000)
