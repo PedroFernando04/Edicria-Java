@@ -32,20 +32,16 @@ public class LivroService {
     private final LivroMapper livroMapper;
     private final AutorRepository autorRepository;
     private final EditoraRepository editoraRepository;
-    private final AutorMapper autorMapper;
-    private final EditoraMapper editoraMapper;
 
     public LivroService(LivroRepository livroRepository,
                         LivroMapper livroMapper,
                         AutorRepository autorRepository,
-                        EditoraRepository editoraRepository, AutorMapper autorMapper, EditoraMapper editoraMapper)
+                        EditoraRepository editoraRepository)
     {
         this.livroRepository = livroRepository;
         this.livroMapper = livroMapper;
         this.autorRepository = autorRepository;
         this.editoraRepository = editoraRepository;
-        this.autorMapper = autorMapper;
-        this.editoraMapper = editoraMapper;
     }
 
     public LivroResponseDTO createLivro(LivroRequestDTO dto){

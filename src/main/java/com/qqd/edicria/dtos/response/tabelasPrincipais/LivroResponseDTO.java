@@ -19,5 +19,7 @@ public record LivroResponseDTO(
 
         EnumCategoriasLivro categoria,
 
-        EnumFormatoLivro formato
+        EnumFormatoLivro formato,
+
+        Integer numeroPaginas
 ) {}

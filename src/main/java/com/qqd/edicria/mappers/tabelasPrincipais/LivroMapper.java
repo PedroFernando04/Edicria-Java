@@ -26,7 +26,8 @@ public class LivroMapper {
                 editoraMapper.toResponseDTO(livro.getEditora()),
                 livro.getDataLancamento(),
                 livro.getCategoria(),
-                livro.getFormato()
+                livro.getFormato(),
+                livro.getNumeroPaginas()
         );
     }
 
@@ -42,6 +43,7 @@ public class LivroMapper {
         livro.setDataLancamento(dto.dataLancamento());
         livro.setCategoria(dto.categoria());
         livro.setFormato(dto.formato());
+        livro.setNumeroPaginas(dto.numeroPaginas());
 
         return livro;
     }

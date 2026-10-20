@@ -39,4 +39,7 @@ public class Livro {
     @Enumerated(EnumType.STRING)
     private EnumFormatoLivro formato;
 
+    @Column(nullable = false)
+    private Integer numeroPaginas;
+
 }

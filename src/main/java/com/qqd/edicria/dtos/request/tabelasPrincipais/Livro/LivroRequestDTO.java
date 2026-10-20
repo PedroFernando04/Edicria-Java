@@ -2,6 +2,7 @@ package com.qqd.edicria.dtos.request.tabelasPrincipais.Livro;
 
 import com.qqd.edicria.entities.enums.livros.EnumCategoriasLivro;
 import com.qqd.edicria.entities.enums.livros.EnumFormatoLivro;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -25,6 +26,10 @@ public record LivroRequestDTO(
         EnumCategoriasLivro categoria,
 
         @NotNull(message = "Formato é obrigatório")
-        EnumFormatoLivro formato
+        EnumFormatoLivro formato,
+
+        @NotNull(message = "O número de páginas é obrigatório")
+        @Min(value = 1, message = "O Livro deve conter ao menos uma página")
+        Integer numeroPaginas
 
 ) {}

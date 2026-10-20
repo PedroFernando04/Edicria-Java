@@ -17,6 +17,8 @@ public record LivroUpdateRequestDTO(
 
         EnumCategoriasLivro categoria,
 
-        EnumFormatoLivro formato
+        EnumFormatoLivro formato,
+
+        Integer numeroPaginas
 ) {
 }
