@@ -1,0 +1,45 @@
+worker_processes 1;
+pid /tmp/nginx.pid;
+events { worker_connections 512; }
+
+http {
+  include /etc/nginx/mime.types;
+  default_type application/octet-stream;
+  sendfile on;
+  client_max_body_size 6m;          # Spring aceita uploads de até 5MB
+  gzip on;
+  gzip_types text/css application/javascript application/json image/svg+xml;
+
+  server {
+    listen ${PORT};
+    root /usr/share/nginx/html;
+
+    # health check do próprio nginx (usado pelo Render/Docker)
+    location = /healthz { access_log off; return 200 "ok\n"; }
+
+    # API -> Spring Boot (mesma origem para o navegador)
+    location /api/ {
+      proxy_pass http://127.0.0.1:8080;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+      proxy_read_timeout 120s;      # tolera a partida lenta do Java
+    }
+    location /api-docs { proxy_pass http://127.0.0.1:8080; }
+    location /swagger-ui { proxy_pass http://127.0.0.1:8080; }
+
+    # assets com hash do Angular: cache longo
+    location ~* \.(?:js|css|svg|woff2?|png|jpg|ico)$ {
+      expires 1y;
+      add_header Cache-Control "public, immutable";
+      try_files $uri =404;
+    }
+
+    # SPA: qualquer rota desconhecida devolve o index.html
+    location / {
+      add_header Cache-Control "no-cache";
+      try_files $uri $uri/ /index.html;
+    }
+  }
+}

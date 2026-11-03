@@ -1,0 +1,30 @@
+# Blueprint do Render: cria o banco Postgres + o web service (Docker)
+databases:
+  - name: edicria-db
+    databaseName: edicria
+    user: edicria
+    plan: free            # o free expira após ~30 dias; use "basic-256mb" para algo permanente
+
+services:
+  - type: web
+    name: edicria
+    runtime: docker
+    plan: free            # free = 512MB RAM; se faltar memória, suba para "starter"
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    envVars:
+      - key: DB_HOST
+        fromDatabase: { name: edicria-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: edicria-db, property: port }
+      - key: DB_NAME
+        fromDatabase: { name: edicria-db, property: database }
+      - key: DB_USER
+        fromDatabase: { name: edicria-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: edicria-db, property: password }
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: JAVA_OPTS
+        value: "-XX:MaxRAMPercentage=60 -XX:+UseSerialGC -Xss512k"

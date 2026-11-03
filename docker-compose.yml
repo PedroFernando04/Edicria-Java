@@ -1,0 +1,34 @@
+# Teste local: docker compose up --build  ->  http://localhost:8081
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: edicria
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d edicria"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8081:10000"      # navegador: http://localhost:8081
+    environment:
+      PORT: 10000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: edicria
+      DB_USER: postgres
+      DB_PASSWORD: 123456
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update   # mantém os dados entre reinícios
+
+volumes:
+  pgdata:

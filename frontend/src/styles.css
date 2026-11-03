@@ -1,0 +1,171 @@
+/* ============================================================
+   Edicria — estilos globais
+   Paleta: papel frio + tinta azul + marca-texto amarelo.
+   O amarelo só aparece onde há "destaque de leitura": item ativo,
+   notas e a ação principal.
+   ============================================================ */
+:root {
+  --papel: #eceef4;
+  --superficie: #f7f8fb;
+  --tinta: #151a3b;
+  --tinta-suave: #4b5072;
+  --linha: #cfd3e2;
+  --linha-forte: #a9aec6;
+  --marca: #ffd84d;
+  --marca-escura: #e8bd12;
+  --perigo: #b3261e;
+  --perigo-fundo: #fbe9e7;
+  --ok: #1b6f4a;
+
+  /* cores das lombadas, uma por categoria */
+  --lombada-livro: #2b3a8c;
+  --lombada-hq: #b8452b;
+  --lombada-manga: #7b2c62;
+  --lombada-graphic_novel: #1b6f6a;
+
+  --fonte-texto: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fonte-titulo: 'Literata', Georgia, 'Times New Roman', serif;
+
+  --raio: 6px;
+  --largura: 1120px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fonte-texto);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(1.9rem, 1.4rem + 2vw, 2.7rem); font-weight: 700; }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.1rem; }
+p { margin: 0; }
+
+a { color: inherit; text-decoration-color: var(--linha-forte); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--tinta); }
+
+:focus-visible {
+  outline: 3px solid var(--tinta);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.so-leitor {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.pagina {
+  width: min(var(--largura), 100% - 2rem);
+  margin-inline: auto;
+  padding-block: 2rem 4rem;
+}
+
+.pagina-topo {
+  display: flex; flex-wrap: wrap; align-items: flex-end;
+  justify-content: space-between; gap: 1rem 2rem;
+  margin-bottom: 1.75rem;
+}
+.pagina-topo p { color: var(--tinta-suave); margin-top: .35rem; max-width: 60ch; }
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 2.5rem; padding: .45rem 1rem;
+  font: inherit; font-weight: 600; font-size: .95rem; line-height: 1.2;
+  color: var(--tinta); background: transparent;
+  border: 1.5px solid var(--tinta); border-radius: var(--raio);
+  cursor: pointer; text-decoration: none;
+  transition: background-color .12s, transform .12s;
+}
+.btn:hover { background: rgb(21 26 59 / .07); }
+.btn:active { transform: translateY(1px); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; transform: none; }
+.btn-principal { background: var(--marca); border-color: var(--tinta); }
+.btn-principal:hover { background: var(--marca-escura); }
+.btn-perigo { color: var(--perigo); border-color: var(--perigo); }
+.btn-perigo:hover { background: var(--perigo-fundo); }
+.btn-leve { border-color: transparent; }
+.btn-pequeno { min-height: 2rem; padding: .25rem .7rem; font-size: .88rem; }
+
+/* ---------- Formulários ---------- */
+.campo { display: flex; flex-direction: column; gap: .3rem; min-width: 0; }
+.campo > label, .campo > .rotulo { font-weight: 600; font-size: .92rem; }
+.campo .dica { font-size: .84rem; color: var(--tinta-suave); }
+.campo .erro { font-size: .84rem; color: var(--perigo); font-weight: 500; }
+
+.entrada {
+  width: 100%; min-height: 2.6rem; padding: .5rem .7rem;
+  font: inherit; color: var(--tinta); background: var(--superficie);
+  border: 1.5px solid var(--linha-forte); border-radius: var(--raio);
+}
+textarea.entrada { min-height: 7rem; resize: vertical; line-height: 1.55; }
+.entrada:hover { border-color: var(--tinta-suave); }
+.entrada:focus-visible { outline: 3px solid var(--marca); outline-offset: 0; border-color: var(--tinta); }
+.entrada.invalido { border-color: var(--perigo); }
+.entrada:disabled { background: var(--papel); color: var(--tinta-suave); }
+
+.grade-form { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grade-form .inteira { grid-column: 1 / -1; }
+@media (max-width: 560px) { .grade-form { grid-template-columns: 1fr; } }
+
+.aviso-form {
+  padding: .7rem .9rem; border-radius: var(--raio);
+  background: var(--perigo-fundo); color: var(--perigo);
+  border: 1px solid #e7b9b4; font-weight: 500; font-size: .93rem;
+}
+
+/* ---------- Chips de filtro ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip {
+  display: inline-flex; align-items: center; gap: .45rem;
+  min-height: 2.25rem; padding: .25rem .85rem;
+  font: inherit; font-size: .92rem; font-weight: 500; color: var(--tinta);
+  background: transparent; border: 1.5px solid var(--linha-forte);
+  border-radius: 999px; cursor: pointer;
+}
+.chip:hover { border-color: var(--tinta); }
+.chip[aria-pressed='true'] { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
+.chip .contagem { font-variant-numeric: tabular-nums; opacity: .7; }
+
+/* ---------- Listas em linhas (sem cartões) ---------- */
+.linhas { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--tinta); }
+.linhas > li {
+  display: grid; align-items: center; gap: .5rem 1.25rem;
+  padding: .85rem .25rem; border-bottom: 1px solid var(--linha);
+}
+
+.vazio {
+  padding: 2.5rem 1rem; text-align: center; color: var(--tinta-suave);
+  border: 1.5px dashed var(--linha-forte); border-radius: var(--raio);
+}
+.vazio h3 { color: var(--tinta); margin-bottom: .35rem; }
+.vazio .btn { margin-top: 1rem; }
+
+.carregando { color: var(--tinta-suave); padding: 2rem 0; }
+
+.nota-marca {
+  display: inline-block; padding: 0 .35em;
+  font-variant-numeric: tabular-nums; font-weight: 700;
+  background: linear-gradient(transparent 12%, var(--marca) 12%, var(--marca) 92%, transparent 92%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; }
+}
